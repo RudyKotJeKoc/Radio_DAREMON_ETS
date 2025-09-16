@@ -1,0 +1,3 @@
+# This file keeps the music folder in git while ignoring actual MP3 files
+# Add your 147 MP3 files here according to the playlist.json structure:
+# Utwor (1).mp3, Utwor (2).mp3, ..., Utwor (147).mp3

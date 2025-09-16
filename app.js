@@ -138,6 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let state = {
         // Radio State
         playlist: [],
+        playlistIndex: null, // Performance optimization for large playlists
         config: {},
         history: [],
         messages: [],
@@ -154,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentDate: new Date(),
         events: {},
         // App State
-        language: 'nl',
+        language: 'pl',
         translations: {},
         machines: [
             "CNC Alpha", "Laser Cutter Pro", "Assembly Line 3", 
@@ -606,7 +607,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- INTERNATIONALIZATION (i18n) ---
     async function i18n_init() {
         const userLang = navigator.language.split('-')[0];
-        state.language = ['nl', 'pl'].includes(userLang) ? userLang : 'nl';
+        state.language = ['nl', 'pl'].includes(userLang) ? userLang : 'pl';
         document.documentElement.lang = state.language;
 
         try {
@@ -728,6 +729,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error('Playlist is empty');
             }
             
+            // Performance optimization for large playlists
+            if (state.playlist.length > 100) {
+                console.warn(`Large playlist detected (${state.playlist.length} tracks) - optimizing performance`);
+                // Pre-index tracks by type for faster filtering
+                state.playlistIndex = {
+                    songs: state.playlist.filter(t => t.type === 'song'),
+                    jingles: state.playlist.filter(t => t.type === 'jingle'),
+                    golden: state.playlist.filter(t => t.golden === true)
+                };
+            }
+            
             console.log(`Loaded ${state.playlist.length} tracks`);
         } catch (e) {
             console.error('Playlist load error:', e);
@@ -763,15 +775,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const jingleConfig = state.config.jingle || {};
         if (!isPreload && jingleConfig.enabled && state.songsSinceJingle >= (jingleConfig.everySongs || 4)) {
-            const jingles = state.playlist.filter(t => t.type === 'jingle');
+            // Use indexed jingles if available, otherwise filter from full playlist
+            const jingles = state.playlistIndex?.jingles || state.playlist.filter(t => t.type === 'jingle');
             if (jingles.length > 0) {
                 state.songsSinceJingle = 0;
                 return jingles[Math.floor(Math.random() * jingles.length)];
             }
         }
 
-        const availableTracks = state.playlist.filter(track => !state.history.includes(track.id) && track.type === 'song');
-        let trackPool = availableTracks.length > 0 ? availableTracks : state.playlist.filter(t => t.type === 'song');
+        // Use indexed songs for better performance with large playlists
+        const allSongs = state.playlistIndex?.songs || state.playlist.filter(t => t.type === 'song');
+        const availableTracks = allSongs.filter(track => !state.history.includes(track.id));
+        let trackPool = availableTracks.length > 0 ? availableTracks : allSongs;
 
         if (availableTracks.length === 0) {
             state.history = state.currentTrack ? [state.currentTrack.id] : [];

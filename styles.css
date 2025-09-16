@@ -33,6 +33,19 @@
     --tertiary-accent: var(--primary-green);
 }
 
+/* --- Dark/Light Theme Support --- */
+[data-theme="light"] {
+    --bg-dark: #f9fafb;
+    --text-color: #111827;
+    --box-bg: rgba(255, 255, 255, 0.9);
+}
+
+[data-theme="dark"] {
+    --bg-dark: #1A1A1A;
+    --text-color: #f0f0f0;
+    --box-bg: rgba(20, 20, 20, 0.85);
+}
+
 
 body {
     font-family: var(--font-family);

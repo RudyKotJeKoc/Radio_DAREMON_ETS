@@ -1,14 +1,14 @@
 {
   "name": "DAREMON Radio ETS",
   "short_name": "DAREMON Radio",
-  "description": "Het officiële bedrijfsradiostation DAREMON ETS - Een energieke dosis humor, technologie en de beste muziek",
+  "description": "Oficjalne radio firmowe DAREMON ETS - Energetyczna dawka humoru, technologii i najlepszej muzyki",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#1A1A1A",
   "theme_color": "#008878",
   "orientation": "portrait-primary",
   "scope": "./",
-  "lang": "nl",
+  "lang": "pl",
   "dir": "ltr",
   "categories": ["music", "entertainment", "productivity"],
   "icons": [
@@ -23,13 +23,19 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    },
+    {
+      "src": "./icons/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
     }
   ],
   "shortcuts": [
     {
-      "name": "Play/Pause",
-      "short_name": "Play",
-      "description": "Toggle music playback",
+      "name": "Odtwórz/Pauza",
+      "short_name": "Odtwórz",
+      "description": "Przełącz odtwarzanie muzyki",
       "url": "./?action=play",
       "icons": [
         {
