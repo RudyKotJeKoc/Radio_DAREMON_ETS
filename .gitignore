@@ -1,0 +1,69 @@
+# Build output
+dist/
+build/
+
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Runtime data
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor directories and files
+.vscode/
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary folders
+tmp/
+temp/
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Cache directories
+.cache
+.parcel-cache
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Vite output
+.vite/
+
+# Local music files (add actual music files to music/ folder manually)
+music/*.mp3
+!music/.gitkeep
