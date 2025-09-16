@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DAREMON Radio ETS</title>
+    
+    <meta name="description" content="Het officiële bedrijfsradiostation DAREMON ETS. Een energieke dosis humor, technologie en de beste muziek. Luister live!">
+    <meta name="theme-color" content="#1A1A1A">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- SEO & Social Media -->
+    <meta property="og:title" content="DAREMON Radio ETS">
+    <meta property="og:description" content="De beste bedrijfsradio vol humor en zorgvuldig geselecteerde energie.">
+    <meta property="og:image" content="https://placehold.co/1200x1200/1A1A1A/008878?text=DAREMON+Radio">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://daremon.nl">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="DAREMON Radio ETS">
+    <meta name="twitter:description" content="De beste bedrijfsradio vol humor en zorgvuldig geselecteerde energie.">
+    <meta name="twitter:image" content="https://placehold.co/1200x1200/1A1A1A/008878?text=DAREMON+Radio">
+    
+    <!-- Icons -->
+    <link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    
+    <!-- Fonts and Styles -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- GSAP Libraries for Advanced Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Draggable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/MotionPathPlugin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <!-- Performance Optimization -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+</head>
+<body data-theme="arburg">
+    
+    <!-- Enhanced Audio Visualizer Canvas -->
+    <canvas id="visualizer-canvas" aria-hidden="true"></canvas>
+    
+    <!-- Offline Indicator -->
+    <div id="offline-indicator" class="hidden" aria-live="assertive" data-i18n-key="offlineMessage">
+        <span>🔌</span> Offline Mode
+    </div>
+
+    <!-- Main App Container -->
+    <div id="app-container">
+        <!-- Main Radio Player View -->
+        <div id="radio-view">
+            
+            <!-- Enhanced Side Panel with Modern Layout -->
+            <aside id="side-panel">
+                <button id="menu-toggle" data-i18n-aria-label="menuToggleLabel" aria-label="Open menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                
+                <div id="drawer-menu">
+                    <div class="drawer-header">
+                        <h2>DAREMON Radio</h2>
+                        <button class="close-drawer" aria-label="Close menu">×</button>
+                    </div>
+                    
+                    <section class="content-box">
+                        <h3 data-i18n-key="recentlyPlayed">Recent Afgespeeld</h3>
+                        <ul id="history-list" class="side-panel-list" aria-live="polite"></ul>
+                    </section>
+
+                    <section class="content-box">
+                        <h3 data-i18n-key="topRated">Best Beoordeeld</h3>
+                        <ul id="top-rated-list" class="side-panel-list interactive-list"></ul>
+                    </section>
+                    
+                    <section class="content-box">
+                        <h3 data-i18n-key="goldenRecords">Gouden Platen</h3>
+                        <ul id="golden-records-list" class="side-panel-list interactive-list"></ul>
+                    </section>
+
+                    <section class="content-box">
+                        <h3 data-i18n-key="messageToDJ">Bericht naar DJ</h3>
+                        <form id="dj-message-form">
+                            <div class="input-group">
+                                <textarea id="dj-message-input" name="message" rows="3" 
+                                         data-i18n-placeholder="djMessagePlaceholder" 
+                                         placeholder="Typ je bericht..."
+                                         maxlength="200" required aria-required="true"></textarea>
+                                <button type="submit" class="send-btn" data-i18n-key="sendMessage" aria-label="Send message">
+                                    <span>📤</span>
+                                </button>
+                            </div>
+                        </form>
+                        <ul id="messages-list" class="messages-container" aria-live="polite"></ul>
+                        <p class="disclaimer-text">
+                            <span class="disclaimer-highlight" data-i18n-key="disclaimerHighlight">Let op:</span> 
+                            <span data-i18n-key="disclaimerText">Berichten worden niet opgeslagen</span>
+                        </p>
+                    </section>
+
+                    <section class="content-box">
+                        <h3 data-i18n-key="changeTheme">Thema Wijzigen</h3>
+                        <div class="theme-switcher">
+                            <button id="theme-arburg" class="theme-btn" 
+                                   data-i18n-title="themeArburg" 
+                                   data-i18n-aria-label="themeArburgLabel"
+                                   aria-label="Arburg theme">
+                                <span class="theme-preview arburg-preview"></span>
+                            </button>
+                            <button id="theme-rave" class="theme-btn"
+                                   data-i18n-title="themeRave" 
+                                   data-i18n-aria-label="themeRaveLabel"
+                                   aria-label="Rave theme">
+                                <span class="theme-preview rave-preview"></span>
+                            </button>
+                        </div>
+                    </section>
+                    
+                    <section class="content-box">
+                        <h3 data-i18n-key="tools">Hulpmiddelen</h3>
+                        <div class="tools-grid">
+                            <button id="calendar-view-btn" class="nav-btn" data-i18n-key="evacuationCalendar">
+                                <span>📅</span> Evacuatiekalender
+                            </button>
+                            <button id="fullscreen-btn" class="nav-btn" aria-label="Toggle fullscreen">
+                                <span>🔳</span> Volledig scherm
+                            </button>
+                        </div>
+                    </section>
+                </div>
+            </aside>
+
+            <!-- Main Content Area -->
+            <main id="main-content">
+                <header class="main-header">
+                    <div class="header-content">
+                        <h1 class="logo">DAREMON Radio ETS</h1>
+                        <p class="tagline" data-i18n-key="headerSubtitle">Het officiële bedrijfsradiostation</p>
+                    </div>
+                    <div class="header-stats">
+                        <div class="stat-item">
+                            <span class="stat-icon">👥</span>
+                            <span data-i18n-key="listenersLabel">Luisteraars:</span> 
+                            <span id="listener-count" class="stat-value">...</span>
+                        </div>
+                        <div class="connection-status" id="connection-status">
+                            <span class="status-dot"></span>
+                            <span class="status-text">Live</span>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Enhanced Now Playing Section -->
+                <section id="now-playing-section" class="content-box now-playing">
+                    <div class="player-container">
+                        <div id="player-ui" class="player-main">
+                            <div class="track-visual">
+                                <img id="track-cover" src="https://placehold.co/200x200/1A1A1A/008878?text=ETS" 
+                                     alt="Current track cover" class="track-cover">
+                                <div class="cover-overlay">
+                                    <div class="eq-bars">
+                                        <span></span><span></span><span></span><span></span><span></span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div id="track-info" class="track-details">
+                                <h2 id="track-title" aria-live="polite" data-i18n-key="trackTitleDefault">
+                                    Welkom bij DAREMON Radio ETS
+                                </h2>
+                                <h3 id="track-artist" data-i18n-key="trackArtistDefault">
+                                    Het beste van technologie en muziek
+                                </h3>
+                                
+                                <div class="progress-section">
+                                    <div id="progress-container" role="slider" 
+                                         data-i18n-aria-label="progressBarLabel" 
+                                         aria-label="Track progress" tabindex="0">
+                                        <div id="progress-bar"></div>
+                                        <div class="progress-handle"></div>
+                                    </div>
+                                    <div id="time-container" class="time-display">
+                                        <span id="current-time">0:00</span>
+                                        <span id="time-remaining">-0:00</span>
+                                    </div>
+                                </div>
+                                
+                                <div id="rating-section" class="rating-container">
+                                    <div id="average-rating-display" class="rating-display"></div>
+                                    <div class="star-rating" data-i18n-aria-label="ratingLabel" 
+                                         aria-label="Rate this track"></div>
+                                    <form id="comment-form" class="comment-form hidden">
+                                        <textarea id="comment-input" 
+                                                 data-i18n-placeholder="commentPlaceholder" 
+                                                 placeholder="Schrijf een recensie..."
+                                                 maxlength="200"></textarea>
+                                        <button type="submit" class="submit-review-btn" data-i18n-key="submitReview">
+                                            Verstuur Recensie
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Enhanced Player Controls -->
+                        <div id="player-controls" class="controls-section">
+                            <div class="primary-controls">
+                                <button id="play-pause-btn" class="control-btn primary-btn" 
+                                       data-i18n-title="playPauseTooltip" 
+                                       data-i18n-aria-label="playPauseLabel"
+                                       aria-label="Play/Pause">
+                                    <span class="btn-icon">▶️</span>
+                                </button>
+                                <button id="next-btn" class="control-btn" 
+                                       data-i18n-title="nextTooltip" 
+                                       data-i18n-aria-label="nextLabel"
+                                       aria-label="Next track">
+                                    <span class="btn-icon">⏭️</span>
+                                </button>
+                                <button id="like-btn" class="control-btn like-btn" 
+                                       data-i18n-title="likeTooltip" 
+                                       data-i18n-aria-label="likeLabel"
+                                       aria-label="Like this track">
+                                    <span class="btn-icon">👍</span> 
+                                    <span id="like-count" class="like-count">0</span>
+                                </button>
+                            </div>
+                            
+                            <div class="secondary-controls">
+                                <div id="volume-control" class="volume-section" 
+                                     data-i18n-title="volumeTooltip" title="Volume control">
+                                    <span class="volume-icon">🔊</span>
+                                    <input type="range" id="volume-slider" class="volume-slider"
+                                           min="0" max="1" step="0.01" value="0.5" 
+                                           data-i18n-aria-label="volumeLabel"
+                                           aria-label="Volume">
+                                    <span class="volume-value">50%</span>
+                                </div>
+                                
+                                <button id="tv-mode-btn" class="control-btn" 
+                                       data-i18n-title="fullscreenTooltip" 
+                                       data-i18n-aria-label="fullscreenLabel"
+                                       aria-label="Fullscreen mode">
+                                    <span class="btn-icon">📺</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Enhanced Hotkeys Info -->
+                <div id="hotkeys-info" class="hotkeys-panel" data-i18n-key="hotkeysInfo">
+                    <div class="hotkey-item">
+                        <kbd>Space</kbd> <span>Afspelen/Pauzeren</span>
+                    </div>
+                    <div class="hotkey-item">
+                        <kbd>N</kbd> <span>Volgende</span>
+                    </div>
+                    <div class="hotkey-item">
+                        <kbd>L</kbd> <span>Like</span>
+                    </div>
+                    <div class="hotkey-item">
+                        <kbd>↑↓</kbd> <span>Volume</span>
+                    </div>
+                    <div class="hotkey-item">
+                        <kbd>M</kbd> <span>Menu</span>
+                    </div>
+                </div>
+            </main>
+
+        </div>
+        
+        <!-- Enhanced Calendar View -->
+        <div id="calendar-view" class="calendar-container hidden">
+            <header class="calendar-header">
+                <div class="calendar-title">
+                    <h1 data-i18n-key="evacuationCalendar">Evacuatiekalender</h1>
+                    <button id="radio-view-btn" class="nav-btn back-btn" data-i18n-key="backToRadio">
+                        <span>🎵</span> Terug naar Radio
+                    </button>
+                </div>
+            </header>
+            
+            <section id="calendar-section" class="content-box calendar-content">
+                <div id="calendar-header" class="calendar-navigation">
+                    <button id="prev-month-btn" class="nav-arrow" aria-label="Previous month">‹</button>
+                    <h2 id="month-year-display" class="month-display"></h2>
+                    <button id="next-month-btn" class="nav-arrow" aria-label="Next month">›</button>
+                </div>
+                <div id="calendar-grid" class="calendar-grid"></div>
+            </section>
+        </div>
+
+    </div>
+
+    <!-- Enhanced Sticky Player -->
+    <div id="sticky-player" class="sticky-player">
+        <div class="sticky-content">
+            <img id="sticky-track-cover" src="https://placehold.co/40x40/1A1A1A/008878?text=ETS" 
+                 alt="Current track" class="sticky-cover">
+            <div id="sticky-player-info" class="sticky-info">
+                <h5 id="sticky-track-title" data-i18n-key="trackTitleDefault">Welkom bij DAREMON Radio ETS</h5>
+                <div id="sticky-progress-container" class="sticky-progress">
+                    <div id="sticky-progress-bar"></div>
+                </div>
+            </div>
+            <div id="sticky-player-controls" class="sticky-controls">
+                <button id="sticky-play-pause-btn" class="control-btn" 
+                       data-i18n-aria-label="playPauseLabel" aria-label="Play/Pause">▶️</button>
+                <button id="sticky-next-btn" class="control-btn" 
+                       data-i18n-aria-label="nextLabel" aria-label="Next">⏭️</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Enhanced Welcome Overlay -->
+    <div id="autoplay-overlay" class="welcome-overlay">
+        <div class="welcome-content">
+            <div class="welcome-logo">
+                <h1>DAREMON Radio ETS</h1>
+                <div class="logo-animation">
+                    <div class="wave"></div>
+                    <div class="wave"></div>
+                    <div class="wave"></div>
+                </div>
+            </div>
+            <div id="welcome-greeting" class="welcome-text"></div>
+            <button id="start-btn" class="start-button" data-i18n-key="startBtn">
+                <span class="btn-text">Start Radio</span>
+                <span class="btn-icon">🎵</span>
+            </button>
+            <p class="welcome-note">Klik om te beginnen met luisteren</p>
+        </div>
+    </div>
+
+    <!-- Enhanced Error Overlay -->
+    <div id="error-overlay" class="error-overlay hidden">
+        <div id="error-message-box" class="error-container">
+            <div class="error-icon">⚠️</div>
+            <div id="error-message" class="error-text"></div>
+            <div class="error-actions">
+                <button id="error-retry-btn" class="retry-btn hidden" data-i18n-key="retryBtn">
+                    Opnieuw proberen
+                </button>
+                <button id="error-close-btn" class="close-btn">OK</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Enhanced Calendar Event Modal -->
+    <div id="event-modal" class="modal-overlay hidden">
+        <div id="event-modal-content" class="modal-container">
+            <div class="modal-header">
+                <h3 data-i18n-key="planEvent">Plan Event</h3>
+                <button class="modal-close" aria-label="Close modal">×</button>
+            </div>
+            
+            <div class="modal-body">
+                <p id="modal-date-display" class="selected-date"></p>
+                <form id="modal-note-form" class="event-form">
+                    <div class="form-group">
+                        <label for="modal-name-input" data-i18n-key="machine">Machine</label>
+                        <select id="modal-name-input" class="form-select" required>
+                            <option value="">Selecteer machine...</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="modal-note-input" data-i18n-key="eventType">Event Type</label>
+                        <select id="modal-note-input" class="form-select" required>
+                            <option value="">Selecteer type...</option>
+                            <option value="disconnect" data-i18n-key="eventDisconnect">Ontkoppeling</option>
+                            <option value="transport" data-i18n-key="eventTransport">Transport</option>
+                        </select>
+                    </div>
+                    
+                    <div id="modal-buttons" class="modal-actions">
+                        <button type="submit" class="submit-btn" data-i18n-key="saveBtn">Opslaan</button>
+                        <button type="button" id="modal-cancel-btn" class="cancel-btn" data-i18n-key="cancelBtn">Annuleren</button>
+                    </div>
+                </form>
+                <p id="modal-feedback" class="modal-feedback"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- No JavaScript Fallback -->
+    <noscript>
+        <div class="noscript-container">
+            <h1>DAREMON Radio ETS</h1>
+            <p data-i18n-key="noScript">JavaScript is vereist voor deze applicatie</p>
+            <p>Schakel JavaScript in om de volledige ervaring te krijgen.</p>
+        </div>
+    </noscript>
+
+    <!-- Enhanced Footer -->
+    <footer id="main-footer" class="main-footer">
+        <div class="footer-content">
+            <p data-i18n-key="footerDisclaimer">© 2025 DAREMON Radio ETS - Alleen voor intern gebruik</p>
+            <p class="disclaimer-text" data-i18n-key="footerDisclaimer2">Alle rechten voorbehouden</p>
+            <div class="footer-links">
+                <a href="#" class="footer-link">Privacy</a>
+                <a href="#" class="footer-link">Voorwaarden</a>
+                <a href="#" class="footer-link">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Main Application Script -->
+    <script src="app.js" defer></script>
+</body>
+</html>

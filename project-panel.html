@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Zarządzania Projektami - Radio Planner</title>
+    <link rel="stylesheet" href="project-panel.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Navigation Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1 class="header-title">
+                        <span class="icon">🎯</span>
+                        Radio Planner
+                    </h1>
+                    <span class="header-subtitle">System Zarządzania Projektami</span>
+                </div>
+                <div class="header-right">
+                    <div class="user-info">
+                        <span class="user-name" id="current-user">Administrator</span>
+                        <div class="user-avatar">
+                            <span>A</span>
+                        </div>
+                    </div>
+                    <button class="theme-toggle" id="theme-toggle" title="Zmień motyw">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Overview -->
+        <section class="dashboard-section">
+            <div class="dashboard-container">
+                <h2 class="section-title">
+                    <span class="icon">📊</span>
+                    Przegląd Projektu
+                </h2>
+                
+                <div class="dashboard-grid">
+                    <!-- Overall Progress Card -->
+                    <div class="dashboard-card progress-card">
+                        <div class="card-header">
+                            <h3>Postęp Ogólny</h3>
+                            <span class="card-icon">📈</span>
+                        </div>
+                        <div class="progress-display">
+                            <div class="progress-number" id="overall-progress">0%</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="overall-progress-bar"></div>
+                            </div>
+                            <div class="progress-text">
+                                <span id="completed-tasks">0</span> z <span id="total-tasks">0</span> zadań
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Task Status Card -->
+                    <div class="dashboard-card status-card">
+                        <div class="card-header">
+                            <h3>Status Zadań</h3>
+                            <span class="card-icon">📋</span>
+                        </div>
+                        <div class="status-grid">
+                            <div class="status-item todo">
+                                <span class="status-count" id="todo-count">0</span>
+                                <span class="status-label">Do zrobienia</span>
+                            </div>
+                            <div class="status-item inprogress">
+                                <span class="status-count" id="inprogress-count">0</span>
+                                <span class="status-label">W toku</span>
+                            </div>
+                            <div class="status-item blocked">
+                                <span class="status-count" id="blocked-count">0</span>
+                                <span class="status-label">Zablokowane</span>
+                            </div>
+                            <div class="status-item done">
+                                <span class="status-count" id="done-count">0</span>
+                                <span class="status-label">Zakończone</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Equipment Categories Card -->
+                    <div class="dashboard-card equipment-card">
+                        <div class="card-header">
+                            <h3>Kategorie Sprzętu</h3>
+                            <span class="card-icon">🏭</span>
+                        </div>
+                        <div class="equipment-stats">
+                            <div class="equipment-item">
+                                <span class="equipment-count" id="equipment-total">0</span>
+                                <span class="equipment-label">Całkowity</span>
+                            </div>
+                            <div class="equipment-breakdown">
+                                <div class="breakdown-item">
+                                    <span class="breakdown-count" id="equipment-planned">0</span>
+                                    <span class="breakdown-label">Zaplanowane</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-count" id="equipment-active">0</span>
+                                    <span class="breakdown-label">W realizacji</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-count" id="equipment-completed">0</span>
+                                    <span class="breakdown-label">Zakończone</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Team Workload Card -->
+                    <div class="dashboard-card team-card">
+                        <div class="card-header">
+                            <h3>Obciążenie Zespołu</h3>
+                            <span class="card-icon">👥</span>
+                        </div>
+                        <div class="team-stats" id="team-stats">
+                            <!-- Dynamic team members will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Action Controls -->
+        <section class="controls-section">
+            <div class="controls-container">
+                <div class="controls-left">
+                    <button class="btn btn-primary" id="add-task-btn">
+                        <span class="btn-icon">➕</span>
+                        Dodaj Zadanie
+                    </button>
+                    <button class="btn btn-primary" id="add-equipment-btn">
+                        <span class="btn-icon">🏭</span>
+                        Dodaj Sprzęt
+                    </button>
+                </div>
+                <div class="controls-right">
+                    <button class="btn btn-secondary" id="export-btn">
+                        <span class="btn-icon">📊</span>
+                        Eksportuj
+                    </button>
+                    <button class="btn btn-secondary" id="import-btn">
+                        <span class="btn-icon">📁</span>
+                        Importuj
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content Tabs -->
+        <section class="content-section">
+            <div class="content-container">
+                <!-- Tab Navigation -->
+                <nav class="tab-nav">
+                    <button class="tab-btn active" data-tab="kanban">
+                        <span class="tab-icon">📋</span>
+                        Tablica Kanban
+                    </button>
+                    <button class="tab-btn" data-tab="gantt">
+                        <span class="tab-icon">📅</span>
+                        Wykres Gantta
+                    </button>
+                    <button class="tab-btn" data-tab="equipment">
+                        <span class="tab-icon">🏭</span>
+                        Baza Sprzętu
+                    </button>
+                </nav>
+
+                <!-- Tab Content -->
+                <div class="tab-content">
+                    <!-- Kanban Board -->
+                    <div class="tab-panel active" id="kanban-panel">
+                        <div class="kanban-board" id="kanban-board">
+                            <div class="kanban-column" data-status="todo">
+                                <div class="column-header">
+                                    <span class="column-title">📝 Do Zrobienia</span>
+                                    <span class="column-count" id="todo-column-count">0</span>
+                                </div>
+                                <div class="column-content" id="todo-column"></div>
+                                <button class="add-task-column" data-status="todo">
+                                    <span>+ Dodaj zadanie</span>
+                                </button>
+                            </div>
+
+                            <div class="kanban-column" data-status="inprogress">
+                                <div class="column-header">
+                                    <span class="column-title">🔄 W Toku</span>
+                                    <span class="column-count" id="inprogress-column-count">0</span>
+                                </div>
+                                <div class="column-content" id="inprogress-column"></div>
+                                <button class="add-task-column" data-status="inprogress">
+                                    <span>+ Dodaj zadanie</span>
+                                </button>
+                            </div>
+
+                            <div class="kanban-column" data-status="blocked">
+                                <div class="column-header">
+                                    <span class="column-title">🚫 Zablokowane</span>
+                                    <span class="column-count" id="blocked-column-count">0</span>
+                                </div>
+                                <div class="column-content" id="blocked-column"></div>
+                                <button class="add-task-column" data-status="blocked">
+                                    <span>+ Dodaj zadanie</span>
+                                </button>
+                            </div>
+
+                            <div class="kanban-column" data-status="done">
+                                <div class="column-header">
+                                    <span class="column-title">✅ Zakończone</span>
+                                    <span class="column-count" id="done-column-count">0</span>
+                                </div>
+                                <div class="column-content" id="done-column"></div>
+                                <button class="add-task-column" data-status="done">
+                                    <span>+ Dodaj zadanie</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gantt Chart -->
+                    <div class="tab-panel" id="gantt-panel">
+                        <div class="gantt-container">
+                            <div class="gantt-controls">
+                                <h3>📅 Harmonogram Projektu</h3>
+                                <div class="gantt-filters">
+                                    <select id="gantt-filter-assignee">
+                                        <option value="">Wszyscy</option>
+                                    </select>
+                                    <select id="gantt-filter-priority">
+                                        <option value="">Wszystkie priorytety</option>
+                                        <option value="high">Wysoki</option>
+                                        <option value="medium">Średni</option>
+                                        <option value="low">Niski</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="gantt-chart" id="gantt-chart">
+                                <!-- Gantt chart content will be generated dynamically -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Equipment Database -->
+                    <div class="tab-panel" id="equipment-panel">
+                        <div class="equipment-container">
+                            <div class="equipment-controls">
+                                <h3>🏭 Baza Sprzętu</h3>
+                                <div class="equipment-filters">
+                                    <input type="text" id="equipment-search" placeholder="Szukaj sprzętu..." />
+                                    <select id="equipment-filter-type">
+                                        <option value="">Wszystkie typy</option>
+                                    </select>
+                                    <select id="equipment-filter-status">
+                                        <option value="">Wszystkie statusy</option>
+                                        <option value="planned">Zaplanowany</option>
+                                        <option value="dismantling">W demontażu</option>
+                                        <option value="ready">Gotowy do wysyłki</option>
+                                        <option value="shipped">Wysłany</option>
+                                        <option value="delivered">Dostarczony</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="equipment-grid" id="equipment-grid">
+                                <!-- Equipment cards will be generated dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Modal for Task/Equipment Forms -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-title">Dodaj Zadanie</h3>
+                <button class="modal-close" id="modal-close">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-content">
+                <form id="modal-form">
+                    <div id="modal-fields">
+                        <!-- Dynamic form fields will be inserted here -->
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary" id="modal-cancel">Anuluj</button>
+                        <button type="submit" class="btn btn-primary">
+                            <span id="modal-submit-text">Zapisz</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden file input for import -->
+    <input type="file" id="file-input" accept=".json,.csv" style="display: none;" />
+
+    <!-- Toast notifications -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Loading overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-spinner"></div>
+        <span class="loading-text">Ładowanie...</span>
+    </div>
+
+    <script src="project-panel.js"></script>
+</body>
+</html>
