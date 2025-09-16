@@ -3,10 +3,13 @@
   "version": "1.0.0",
   "description": "DAREMON Radio ETS - Het officiële bedrijfsradiostation",
   "main": "index.html",
+  "type": "module",
   "scripts": {
-    "dev": "python3 -m http.server 8000",
+    "dev": "vite --mode development --port 8000",
+    "build": "vite build",
+    "preview": "vite preview",
+    "serve": "python3 -m http.server 8000",
     "start": "python3 -m http.server 8000",
-    "build": "echo 'Build complete - static files ready'",
     "lint": "echo 'Linting complete'",
     "test": "echo 'Tests passed'",
     "validate": "python3 -c \"import json; json.load(open('playlist.json')); json.load(open('manifest.json')); print('JSON files valid')\""
@@ -21,10 +24,17 @@
   ],
   "author": "DAREMON Team",
   "license": "MIT",
-  "devDependencies": {},
-  "dependencies": {},
+  "devDependencies": {
+    "vite": "^5.0.0"
+  },
+  "dependencies": {
+    "gsap": "^3.12.0"
+  },
+  "optionalDependencies": {
+    "gsap": "^3.12.0"
+  },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=18.0.0"
   },
   "browserslist": [
     "> 1%",

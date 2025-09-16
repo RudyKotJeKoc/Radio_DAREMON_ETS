@@ -16,12 +16,17 @@ const APP_SHELL_ASSETS = [
     './index.html',
     './app.js',
     './styles.css',
+    './project-panel.js',
+    './project-panel.css',
     './manifest.json',
     './playlist.json'
 ];
 
 // Optional assets (nice to have but not critical)
 const OPTIONAL_ASSETS = [
+    './machine-planning.html',
+    './project-management.html',
+    './project-panel.html',
     './locales/nl.json',
     './locales/pl.json',
     './icons/favicon.svg',
